@@ -1,0 +1,24 @@
+# ============================================================================
+# CODEOWNERS — Project Forge
+# ============================================================================
+# These owners will be automatically requested for review on PRs.
+# Update with your GitHub username or team handles.
+# ============================================================================
+
+# Global fallback
+*                       @your-username
+
+# Backend
+/apps/api/              @your-username
+
+# Frontend
+/apps/web/              @your-username
+
+# Shared packages
+/packages/              @your-username
+
+# CI/CD — requires careful review
+/.github/               @your-username
+
+# Documentation
+/docs/                  @your-username

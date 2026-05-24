@@ -1,0 +1,127 @@
+# ============================================================================
+# Project Forge — Master .gitignore
+# Monorepo: ASP.NET Core 8 + Next.js / React
+# ============================================================================
+
+# ────────────────────────────────────────────────────────────────────────────
+# .NET / C#
+# ────────────────────────────────────────────────────────────────────────────
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.csproj.user
+project.lock.json
+packages/
+*.nupkg
+*.snupkg
+
+# NuGet
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Build results
+[Dd]ebugPublic/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]uild[Ll]og.*
+[Ll]og/
+
+# Visual Studio / Rider
+.vs/
+.vscode/
+*.rsuser
+*.sln.iml
+.idea/
+*.DotSettings.user
+
+# User-specific files
+*.suo
+*.user
+*.dbmdl
+*.jfm
+
+# ────────────────────────────────────────────────────────────────────────────
+# Node.js / Next.js / React
+# ────────────────────────────────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+.turbo/
+dist/
+build/
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+
+# Package managers
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Storybook
+storybook-static/
+
+# ────────────────────────────────────────────────────────────────────────────
+# Environment & Secrets
+# ────────────────────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+appsettings.Development.json
+appsettings.Local.json
+
+# ────────────────────────────────────────────────────────────────────────────
+# OS Artifacts
+# ────────────────────────────────────────────────────────────────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+
+# ────────────────────────────────────────────────────────────────────────────
+# Testing & Coverage
+# ────────────────────────────────────────────────────────────────────────────
+coverage/
+*.lcov
+TestResults/
+*.trx
+
+# ────────────────────────────────────────────────────────────────────────────
+# Misc
+# ────────────────────────────────────────────────────────────────────────────
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+*.orig
