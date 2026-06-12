@@ -116,7 +116,9 @@ Push to main/develop or PR opened
 |---|---|---|
 | [.NET SDK](https://dotnet.microsoft.com/download) | 8.0+ | Backend runtime |
 | [Node.js](https://nodejs.org/) | 20 LTS | Frontend runtime |
+| [pnpm](https://pnpm.io/) | 8.0+ | Monorepo package manager |
 | [Git](https://git-scm.com/) | 2.40+ | Version control |
+| [Docker](https://www.docker.com/) | Latest | Local orchestration (optional) |
 
 ### Instantiate a New Project
 
@@ -127,20 +129,28 @@ Push to main/develop or PR opened
    cd my-new-project
    ```
 
-2. **Bootstrap the Backend**
+2. **Bootstrap the Monorepo**
    ```bash
-   cd apps/api
-   dotnet restore
-   dotnet run
-   # API is live at https://localhost:5001
+   # Install all dependencies across apps and packages
+   pnpm install
    ```
 
-3. **Bootstrap the Frontend**
+3. **Start Development Servers**
    ```bash
-   cd apps/web
-   npm install
-   npm run dev
+   # Start the .NET API
+   cd apps/api
+   dotnet run
+   # API is live at http://localhost:5001 (and Swagger at /swagger)
+
+   # Start the Next.js frontend (new terminal)
+   pnpm turbo run dev --filter=web
    # Web is live at http://localhost:3000
+   ```
+
+   **Alternative: Docker Compose**
+   ```bash
+   # Spin up the entire stack (API + Web)
+   docker-compose up --build
    ```
 
 4. **Rename & Configure**
@@ -173,10 +183,10 @@ git push origin feat/user-auth
 
 ## Project Roadmap
 
-- [ ] Add Docker Compose for local multi-service orchestration
+- [x] Add Docker Compose for local multi-service orchestration
 - [ ] Add Terraform / Pulumi IaC in `/infra`
 - [ ] Add shared API client generation (OpenAPI → TypeScript)
-- [ ] Add Turborepo or Nx for smart caching and task orchestration
+- [x] Add Turborepo or Nx for smart caching and task orchestration
 - [ ] Add Husky + lint-staged for pre-commit hooks
 
 ---
