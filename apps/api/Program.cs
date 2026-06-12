@@ -40,6 +40,8 @@ builder.WebHost.ConfigureKestrel(options =>
 
 // ── Services ──────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Output cache (uncomment to use)
 // builder.Services.AddOutputCache();
@@ -61,6 +63,12 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // ── Middleware ────────────────────────────────────────────────────────────
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseCors();
 // app.UseOutputCache();
 

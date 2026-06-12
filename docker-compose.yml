@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - projectforge-network
+
+  web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - projectforge-network
+    depends_on:
+      - api
+
+networks:
+  projectforge-network:
+    driver: bridge
