@@ -31,7 +31,7 @@ builder.WebHost.ConfigureKestrel(options =>
 {
     // Increase the max concurrent connections ceiling.
     // Tune these values based on your load-test results.
-    options.Limits.MaxConcurrentConnections         = 10_000;
+    options.Limits.MaxConcurrentConnections = 10_000;
     options.Limits.MaxConcurrentUpgradedConnections = 10_000;
 
     // Reduce header size limits to reject oversized requests early.
@@ -92,7 +92,7 @@ app.MapGet("/", () => Results.Ok(new
 {
     service = "Project Forge API",
     version = "1.0.0",
-    status  = "running",
+    status = "running",
     timestamp = DateTime.UtcNow
 }))
 .WithName("Root")
