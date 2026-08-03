@@ -62,7 +62,7 @@ jobs:
         run: |
           # 1. Build the API to ensure api.json is generated
           cd apps/api
-          dotnet build --configuration Release
+          dotnet build --no-restore --configuration Release
           
           # 2. Generate frontend hooks
           cd ../web
