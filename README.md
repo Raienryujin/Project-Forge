@@ -1,12 +1,12 @@
 <p align="center">
   <strong>⚒️ Project Forge</strong><br/>
-  <em>Enterprise Monorepo Template — Full-Stack Golden Path</em>
+  <em>Proprietary Delivery Engine — Full-Stack Golden Path</em>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white" alt=".NET 8" />
   <img src="https://img.shields.io/badge/Next.js-14-000000?logo=nextdotjs&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/CI-GitHub_Actions-2088FF?logo=githubactions&logoColor=white" alt="GitHub Actions" />
+  <img src="https://img.shields.io/badge/Nx-Workspace-143055?logo=nx&logoColor=white" alt="Nx Workspace" />
   <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
 </p>
 
@@ -14,9 +14,9 @@
 
 ## Overview
 
-**Project Forge** is a production-grade monorepo template designed for **atomic full-stack commits**. It co-locates backend, frontend, shared packages, infrastructure config, and CI/CD in a single repository — enabling you to ship a cross-cutting feature (API endpoint + UI component + shared type) in one commit, one review, one merge.
+**Project Forge: A custom full-stack monorepo architecture designed to accelerate end-to-end feature delivery, ensuring strict type safety from the C# backend to the Next.js UI.**
 
-Use this repository as a **GitHub Template** to instantly scaffold a new project with battle-tested defaults.
+This is not just a generic template; it is a proprietary delivery engine. By unifying the backend (.NET Minimal API) and frontend (Next.js) under **Nx**, it natively manages the dependency graph, computation caching, and affected-builds far better than manual scripts or YAML path filters.
 
 ---
 
@@ -75,36 +75,30 @@ ProjectForge/
 | **Convention Over Config** | Predictable directory structure reduces onboarding friction |
 | **Environment Parity** | `.env.example` files document every required variable |
 
----
+## Nx & Day Zero OpenAPI Type Safety
 
-## Path-Filtered CI/CD Strategy
-
-The CI pipeline (`.github/workflows/ci.yml`) implements a **path-filtered** strategy to keep build times fast and resource usage minimal in a monorepo.
+The CI pipeline implements a robust mechanism powered by **Nx** and **Orval** to ensure complete alignment between the backend and frontend. 
 
 ### How It Works
+
+1. **Nx Affected Builds:** Instead of manual YAML path filters, Nx intelligently calculates the dependency graph. It only builds, tests, and lints the projects affected by your commit.
+2. **Day Zero OpenAPI Generation:** 
+   - The .NET Minimal API generates a `swagger.json` (OpenAPI spec) at build time.
+   - The Next.js frontend uses Orval to automatically generate strongly-typed API hooks (SWR/React Query) directly from this Swagger output.
+3. **Strict Type-Mapping Gate:** 
+   - A pull request is **not allowed to merge** unless the frontend types map perfectly to the backend. The pipeline validates that the generated frontend hooks exactly match the latest C# API models.
 
 ```
 Push to main/develop or PR opened
         │
-        ├─── Files changed in apps/api/** or .github/workflows/**
-        │       └── ✅ Trigger build-api job
-        │             • dotnet restore → build → test
-        │
-        ├─── Files changed in apps/web/** or .github/workflows/**
-        │       └── ✅ Trigger build-web job
-        │             • npm ci → lint → build
-        │
-        └─── ci-gate (aggregator)
-                └── Reports overall pass/fail for branch protection
+        └─── Nx Affected Computations
+                │
+                ├─── .NET API Build ──> Generates api.json (OpenAPI)
+                │
+                ├─── Web App Build ──> Runs Orval to generate hooks
+                │
+                └─── Strict Type Gate ──> Fails if API models don't match frontend types
 ```
-
-### Key Features
-
-- **Concurrency control**: Duplicate runs on the same branch are automatically cancelled
-- **CI Gate job**: A single status check (`ci-gate`) that branch protection rules can target, regardless of which subset of jobs ran
-- **Workflow changes always trigger all jobs**: Edits to `.github/workflows/**` rebuild everything, ensuring pipeline integrity
-
-> **💡 Upgrading to `on.push.paths`**: For larger teams, replace the `if:` conditions with native `on.push.paths` filters per workflow file (one workflow per app). The current single-file approach is optimized for solo/small-team velocity.
 
 ---
 
@@ -142,8 +136,10 @@ Push to main/develop or PR opened
    dotnet run
    # API is live at http://localhost:5001 (and Swagger at /swagger)
 
-   # Start the Next.js frontend (new terminal)
-   pnpm turbo run dev --filter=web
+   # In a new terminal, generate API hooks & start the Next.js frontend
+   cd apps/web
+   pnpm run generate-api
+   npx nx serve web
    # Web is live at http://localhost:3000
    ```
 
@@ -185,8 +181,8 @@ git push origin feat/user-auth
 
 - [x] Add Docker Compose for local multi-service orchestration
 - [ ] Add Terraform / Pulumi IaC in `/infra`
-- [ ] Add shared API client generation (OpenAPI → TypeScript)
-- [x] Add Turborepo or Nx for smart caching and task orchestration
+- [x] Add shared API client generation (OpenAPI → TypeScript) via Orval
+- [x] Migrate to Nx for smart caching and task orchestration
 - [ ] Add Husky + lint-staged for pre-commit hooks
 
 ---

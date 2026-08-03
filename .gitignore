@@ -16,13 +16,10 @@
 *.sln.docstates
 *.csproj.user
 project.lock.json
-packages/
 *.nupkg
 *.snupkg
 
 # NuGet
-**/[Pp]ackages/*
-!**/[Pp]ackages/build/
 *.nuget.props
 *.nuget.targets
 
@@ -125,3 +122,9 @@ TestResults/
 *.swo
 *.bak
 *.orig
+
+
+
+.nx/cache
+.nx/workspace-data
+.nx/migrate-runs
