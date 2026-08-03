@@ -50,7 +50,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Derive appropriate SHAs for Nx
         uses: nrwl/nx-set-shas@v4
@@ -68,13 +68,13 @@ jobs:
           cd ../web
           pnpm run generate-api
           
-          # 3. Check for uncommitted changes
+          # 3. Check for uncommitted generated changes
           cd ../../
-          if [[ -n $(git status --porcelain) ]]; then
+          if [[ -n $(git status --porcelain -- apps/web/src/api) ]]; then
             echo "::error::Strict Type Gate Failed: The frontend types do not map perfectly to the backend."
             echo "::error::Please run 'pnpm run generate-api' in apps/web and commit the generated types."
-            git status --porcelain
-            git diff
+            git status --porcelain -- apps/web/src/api
+            git diff -- apps/web/src/api
             exit 1
           fi
           echo "✅ Strict Type Gate Passed: Frontend types perfectly match the C# API."
