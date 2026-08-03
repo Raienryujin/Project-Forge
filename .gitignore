@@ -125,3 +125,9 @@ TestResults/
 *.swo
 *.bak
 *.orig
+
+
+
+.nx/cache
+.nx/workspace-data
+.nx/migrate-runs

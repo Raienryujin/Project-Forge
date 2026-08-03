@@ -1,10 +1,3 @@
-# ============================================================================
-# Project Forge — Path-Filtered CI Pipeline
-# ============================================================================
-# Strategy: Each job triggers ONLY when its relevant source paths change.
-# This keeps CI fast and cost-efficient in a monorepo.
-# ============================================================================
-
 name: CI
 
 on:
@@ -17,57 +10,20 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# ──────────────────────────────────────────────────────────────────────────────
 jobs:
-  # ── Backend: ASP.NET Core 8 ───────────────────────────────────────────────
-  build-api:
-    name: "🔧 Build API (.NET 8)"
+  validate-and-build:
+    name: "Nx Build & Strict Type Gate"
     runs-on: ubuntu-latest
-
-    # Only run when backend source or workflow definitions change
-    if: >-
-      github.event_name == 'pull_request' ||
-      contains(github.event.head_commit.modified, 'apps/api') ||
-      contains(github.event.head_commit.modified, '.github/workflows')
-
-    defaults:
-      run:
-        working-directory: apps/api
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --no-restore --configuration Release
-
-      - name: Run tests
-        run: dotnet test --no-build --configuration Release --verbosity normal
-        continue-on-error: false
-
-  # ── Frontend: Next.js / React ─────────────────────────────────────────────
-  build-web:
-    name: "🌐 Build Web (Next.js)"
-    runs-on: ubuntu-latest
-
-    # Only run when frontend source or workflow definitions change
-    if: >-
-      github.event_name == 'pull_request' ||
-      contains(github.event.head_commit.modified, 'apps/web') ||
-      contains(github.event.head_commit.modified, 'packages') ||
-      contains(github.event.head_commit.modified, '.github/workflows')
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -96,25 +52,29 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build Web
-        run: pnpm turbo run build --filter=web
+      - name: Derive appropriate SHAs for Nx
+        uses: nrwl/nx-set-shas@v4
 
-  # ── Gate: CI Status Check ─────────────────────────────────────────────────
-  ci-gate:
-    name: "✅ CI Gate"
-    runs-on: ubuntu-latest
-    needs: [build-api, build-web]
-    if: always()
-    steps:
-      - name: Evaluate job results
+      - name: Run Nx Affected (Lint, Test, Build)
+        run: npx nx affected -t lint test build
+
+      - name: Strict Type Gate (Day Zero OpenAPI)
         run: |
-          echo "API:  ${{ needs.build-api.result }}"
-          echo "Web:  ${{ needs.build-web.result }}"
-
-          if [[ "${{ needs.build-api.result }}" == "failure" || \
-                "${{ needs.build-web.result }}" == "failure" ]]; then
-            echo "::error::One or more CI jobs failed."
+          # 1. Build the API to ensure api.json is generated
+          cd apps/api
+          dotnet build --no-restore --configuration Release
+          
+          # 2. Generate frontend hooks
+          cd ../web
+          pnpm run generate-api
+          
+          # 3. Check for uncommitted changes
+          cd ../../
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "::error::Strict Type Gate Failed: The frontend types do not map perfectly to the backend."
+            echo "::error::Please run 'pnpm run generate-api' in apps/web and commit the generated types."
+            git status --porcelain
+            git diff
             exit 1
           fi
-
-          echo "All gates passed."
+          echo "✅ Strict Type Gate Passed: Frontend types perfectly match the C# API."
