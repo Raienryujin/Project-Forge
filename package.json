@@ -8,11 +8,23 @@
     "build": "nx run-many -t build",
     "dev": "nx run-many -t dev",
     "lint": "nx run-many -t lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@nx-dotnet/core": "^3.0.2",
     "@orval/swr": "^8.23.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "nx": "23.1.1",
     "orval": "^8.23.0",
     "prettier": "^3.2.0",
