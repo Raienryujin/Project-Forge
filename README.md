@@ -131,15 +131,9 @@ Push to main/develop or PR opened
 
 3. **Start Development Servers**
    ```bash
-   # Start the .NET API
-   cd apps/api
-   dotnet run
+   # Start the .NET API and Next.js frontend concurrently
+   pnpm nx run-many -t serve -p api web
    # API is live at http://localhost:5001 (and Swagger at /swagger)
-
-   # In a new terminal, generate API hooks & start the Next.js frontend
-   cd apps/web
-   pnpm run generate-api
-   npx nx serve web
    # Web is live at http://localhost:3000
    ```
 
@@ -181,9 +175,9 @@ git push origin feat/user-auth
 
 - [x] Add Docker Compose for local multi-service orchestration
 - [ ] Add Terraform / Pulumi IaC in `/infra`
+- [x] Add Husky + lint-staged for pre-commit hooks
 - [x] Add shared API client generation (OpenAPI → TypeScript) via Orval
 - [x] Migrate to Nx for smart caching and task orchestration
-- [ ] Add Husky + lint-staged for pre-commit hooks
 
 ---
 

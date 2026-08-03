@@ -1,3 +1,16 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json"
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "plugins": ["@nx-dotnet/core"],
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build", "generate-api"],
+      "outputs": ["{projectRoot}/.next/**", "!{projectRoot}/.next/cache/**", "{projectRoot}/bin/**", "{projectRoot}/obj/**"]
+    },
+    "serve": {
+      "dependsOn": ["generate-api"]
+    },
+    "generate-api": {
+      "dependsOn": ["api:build"]
+    }
+  }
 }
