@@ -1,0 +1,9 @@
+{
+  "extends": "@projectforge/config/tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src"]
+}
