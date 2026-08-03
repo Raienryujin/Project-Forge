@@ -56,7 +56,7 @@ ProjectForge/
 │
 ├── .github/
 │   ├── workflows/
-│   │   └── ci.yml            # Path-filtered CI pipeline
+│   │   └── ci.yml            # Nx Graph-Aware CI pipeline
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   └── CODEOWNERS
 │
@@ -67,25 +67,26 @@ ProjectForge/
 
 ### Design Principles
 
-| Principle | Implementation |
-|---|---|
-| **Atomic Commits** | API + Web changes land in a single PR — no cross-repo sync |
-| **Path-Filtered CI** | Only changed apps trigger builds — fast feedback, lower cost |
-| **Shared Packages** | Types, configs, and UI components live in `/packages` — DRY |
-| **Convention Over Config** | Predictable directory structure reduces onboarding friction |
-| **Environment Parity** | `.env.example` files document every required variable |
+| Principle                  | Implementation                                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Atomic Commits**         | API + Web changes land in a single PR — no cross-repo sync                                        |
+| **Graph-Aware CI**         | Nx calculates affected dependencies, ensuring CI only builds and tests what you actually changed. |
+| **Shift-Left Quality**     | Husky & lint-staged strictly enforce dotnet format, Prettier, and ESLint at the pre-commit layer. |
+| **Shared Packages**        | Types, configs, and UI components live in `/packages` — DRY                                       |
+| **Convention Over Config** | Predictable directory structure reduces onboarding friction                                       |
+| **Environment Parity**     | `.env.example` files document every required variable                                             |
 
 ## Nx & Day Zero OpenAPI Type Safety
 
-The CI pipeline implements a robust mechanism powered by **Nx** and **Orval** to ensure complete alignment between the backend and frontend. 
+The CI pipeline implements a robust mechanism powered by **Nx** and **Orval** to ensure complete alignment between the backend and frontend.
 
 ### How It Works
 
 1. **Nx Affected Builds:** Instead of manual YAML path filters, Nx intelligently calculates the dependency graph. It only builds, tests, and lints the projects affected by your commit.
-2. **Day Zero OpenAPI Generation:** 
+2. **Day Zero OpenAPI Generation:**
    - The .NET Minimal API generates a `swagger.json` (OpenAPI spec) at build time.
    - The Next.js frontend uses Orval to automatically generate strongly-typed API hooks (SWR/React Query) directly from this Swagger output.
-3. **Strict Type-Mapping Gate:** 
+3. **Strict Type-Mapping Gate:**
    - A pull request is **not allowed to merge** unless the frontend types map perfectly to the backend. The pipeline validates that the generated frontend hooks exactly match the latest C# API models.
 
 ```
@@ -106,30 +107,33 @@ Push to main/develop or PR opened
 
 ### Prerequisites
 
-| Tool | Version | Purpose |
-|---|---|---|
-| [.NET SDK](https://dotnet.microsoft.com/download) | 8.0+ | Backend runtime |
-| [Node.js](https://nodejs.org/) | 20 LTS | Frontend runtime |
-| [pnpm](https://pnpm.io/) | 8.0+ | Monorepo package manager |
-| [Git](https://git-scm.com/) | 2.40+ | Version control |
-| [Docker](https://www.docker.com/) | Latest | Local orchestration (optional) |
+| Tool                                              | Version | Purpose                        |
+| ------------------------------------------------- | ------- | ------------------------------ |
+| [.NET SDK](https://dotnet.microsoft.com/download) | 8.0+    | Backend runtime                |
+| [Node.js](https://nodejs.org/)                    | 20 LTS  | Frontend runtime               |
+| [pnpm](https://pnpm.io/)                          | 8.0+    | Monorepo package manager       |
+| [Git](https://git-scm.com/)                       | 2.40+   | Version control                |
+| [Docker](https://www.docker.com/)                 | Latest  | Local orchestration (optional) |
 
 ### Instantiate a New Project
 
 1. **Create from Template**
    - Click **"Use this template"** on GitHub, or:
+
    ```bash
    gh repo create my-new-project --template <your-username>/ProjectForge --private --clone
    cd my-new-project
    ```
 
 2. **Bootstrap the Monorepo**
+
    ```bash
    # Install all dependencies across apps and packages
    pnpm install
    ```
 
 3. **Start Development Servers**
+
    ```bash
    # Start the .NET API and Next.js frontend concurrently
    pnpm nx run-many -t serve -p api web
@@ -138,6 +142,7 @@ Push to main/develop or PR opened
    ```
 
    **Alternative: Docker Compose**
+
    ```bash
    # Spin up the entire stack (API + Web)
    docker-compose up --build
