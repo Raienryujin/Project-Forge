@@ -168,6 +168,7 @@ git checkout -b feat/user-auth
 
 # Commit atomically
 git add .
+# Husky will automatically run Prettier and ESLint via lint-staged!
 git commit -m "feat: implement user authentication flow"
 
 # Push — CI runs only the jobs affected by your changes
