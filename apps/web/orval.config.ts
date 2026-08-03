@@ -8,8 +8,6 @@ export default defineConfig({
       target: 'src/api/generated',
       schemas: 'src/api/generated/model',
       client: 'swr',
-      mock: true,
-      prettier: true,
     },
   },
 });

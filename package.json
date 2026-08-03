@@ -5,9 +5,9 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "build": "nx run-many -t build",
+    "dev": "nx run-many -t dev",
+    "lint": "nx run-many -t lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
@@ -16,7 +16,6 @@
     "nx": "23.1.1",
     "orval": "^8.23.0",
     "prettier": "^3.2.0",
-    "swr": "^2.4.2",
-    "turbo": "^1.12.0"
+    "swr": "^2.4.2"
   }
 }
