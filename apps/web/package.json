@@ -10,6 +10,21 @@
     "lint": "next lint",
     "generate-api": "orval"
   },
+  "nx": {
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "generate-api",
+          "^build"
+        ]
+      },
+      "serve": {
+        "dependsOn": [
+          "generate-api"
+        ]
+      }
+    }
+  },
   "dependencies": {
     "@projectforge/types": "workspace:*",
     "@projectforge/ui": "workspace:*",

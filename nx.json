@@ -3,11 +3,16 @@
   "plugins": ["@nx-dotnet/core"],
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build", "generate-api"],
-      "outputs": ["{projectRoot}/.next/**", "!{projectRoot}/.next/cache/**", "{projectRoot}/bin/**", "{projectRoot}/obj/**"]
+      "dependsOn": ["^build"],
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "!{projectRoot}/.next/cache/**",
+        "{projectRoot}/bin/**",
+        "{projectRoot}/obj/**"
+      ]
     },
-    "serve": {
-      "dependsOn": ["generate-api"]
+    "@nx-dotnet/core:serve": {
+      "dependsOn": ["build"]
     },
     "generate-api": {
       "dependsOn": ["api:build"]
