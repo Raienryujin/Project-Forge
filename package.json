@@ -22,7 +22,9 @@
   },
   "devDependencies": {
     "@nx-dotnet/core": "^3.0.2",
+    "@nx/next": "^23.1.1",
     "@orval/swr": "^8.23.0",
+    "eslint": "^8.56.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "nx": "23.1.1",
