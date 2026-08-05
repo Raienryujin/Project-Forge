@@ -25,6 +25,11 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
+      - name: Restore .NET local tools
+        # Installs Swashbuckle.AspNetCore.Cli so the api:build MSBuild target
+        # can execute 'dotnet swagger tofile' to emit packages/types/openapi.json
+        run: dotnet tool restore
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
