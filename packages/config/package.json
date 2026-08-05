@@ -2,5 +2,14 @@
   "name": "@projectforge/config",
   "version": "0.1.0",
   "private": true,
-  "main": "eslint-preset.mjs"
+  "type": "module",
+  "main": "./eslint-preset.mjs",
+  "exports": {
+    "./eslint-preset.mjs": {
+      "import": "./eslint-preset.mjs",
+      "require": "./eslint-preset.mjs",
+      "default": "./eslint-preset.mjs"
+    },
+    "./tsconfig.json": "./tsconfig.json"
+  }
 }
