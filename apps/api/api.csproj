@@ -8,7 +8,6 @@
     <!-- Native Microsoft build-time OpenAPI generation -->
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
     <OpenApiDocumentsDirectory>../../packages/types</OpenApiDocumentsDirectory>
-    <OpenApiGenerateDocumentsOptions>--file openapi.json</OpenApiGenerateDocumentsOptions>
   </PropertyGroup>
 
   <ItemGroup>
