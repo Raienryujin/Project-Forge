@@ -109,3 +109,6 @@ api.MapGet("/ping", () => Results.Ok(new { message = "pong" }))
 
 // ── Run ───────────────────────────────────────────────────────────────────
 app.Run();
+
+// Required for Swashbuckle CLI and WebApplicationFactory to discover the Minimal API entry point
+public partial class Program { }
