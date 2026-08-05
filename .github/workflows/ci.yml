@@ -23,7 +23,7 @@ jobs:
       - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          global-json-file: global.json
 
       - name: Restore .NET local tools
         # Installs Swashbuckle.AspNetCore.Cli so the api:build MSBuild target
