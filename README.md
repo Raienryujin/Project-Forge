@@ -101,6 +101,13 @@ Push to main/develop or PR opened
                 └─── Strict Type Gate ──> Fails if API models don't match frontend types
 ```
 
+### Deterministic Tooling & Config Resolution
+
+To maintain a strict, flake-free CI pipeline, the monorepo adheres to the following constraints:
+
+- **.NET 8 SDK Lock:** A root `global.json` strictly locks the repository to the `.NET 8.0.x` band. The `Swashbuckle.AspNetCore.Cli` tool is explicitly downgraded to `v6.5.0` (with `DOTNET_ROLL_FORWARD=Major` in the `.csproj`) to prevent cross-compilation errors on CI runners carrying preview SDKs.
+- **Relative Config Imports:** To bypass strict ESM `node_modules` resolution failures (e.g. `ERR_MODULE_NOT_FOUND` in ESLint or `get-tsconfig` crashes in Orval), all internal workspace configs (`tsconfig.json`, `eslint.config.mjs`) **must** extend the shared `@projectforge/config` using direct relative filesystem paths (`../../packages/config/...`).
+
 ---
 
 ## Getting Started
@@ -111,7 +118,7 @@ Push to main/develop or PR opened
 | ------------------------------------------------- | ------- | ------------------------------ |
 | [.NET SDK](https://dotnet.microsoft.com/download) | 8.0+    | Backend runtime                |
 | [Node.js](https://nodejs.org/)                    | 20 LTS  | Frontend runtime               |
-| [pnpm](https://pnpm.io/)                          | 8.0+    | Monorepo package manager       |
+| [pnpm](https://pnpm.io/)                          | 9.0+    | Monorepo package manager       |
 | [Git](https://git-scm.com/)                       | 2.40+   | Version control                |
 | [Docker](https://www.docker.com/)                 | Latest  | Local orchestration (optional) |
 
