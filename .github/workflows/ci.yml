@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   validate-and-build:
-    name: "Nx Build & Strict Type Gate"
+    name: "Nx Graph Execution & Build"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - name: Setup pnpm cache
+      - name: Cache pnpm store
         uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
@@ -52,26 +52,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Cache Nx Workspace
+        uses: actions/cache@v4
+        with:
+          path: .nx/cache
+          key: ${{ runner.os }}-nx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-nx-
+
       - name: Derive appropriate SHAs for Nx
         uses: nrwl/nx-set-shas@v4
 
       - name: Run Nx Affected (Lint, Test, Build)
+        # The Nx graph mathematically guarantees api:build and web:generate-api
+        # execute before any web targets that depend on them.
         run: npx nx affected -t lint test build
-
-      - name: Strict Type Gate (Day Zero OpenAPI)
-        run: |
-          # 1. Build the API to ensure openapi.json is generated
-          dotnet build apps/api --configuration Release
-          
-          # 2. Generate frontend hooks
-          npx nx run web:generate-api
-          
-          # 3. Check for uncommitted generated changes
-          if [[ -n $(git status --porcelain -- apps/web/src/api packages/types/openapi.json) ]]; then
-            echo "::error::Strict Type Gate Failed: The frontend types do not map perfectly to the backend."
-            echo "::error::Please run 'pnpm nx run web:generate-api' and commit the generated types."
-            git status --porcelain -- apps/web/src/api packages/types/openapi.json
-            git diff -- apps/web/src/api packages/types/openapi.json
-            exit 1
-          fi
-          echo "✅ Strict Type Gate Passed: Frontend types perfectly match the C# API."

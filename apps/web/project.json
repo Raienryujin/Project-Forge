@@ -15,6 +15,9 @@
     "serve": {
       "dependsOn": ["generate-api"]
     },
+    "lint": {
+      "dependsOn": ["generate-api"]
+    },
     "build": {
       "dependsOn": ["generate-api", "^build"]
     }
