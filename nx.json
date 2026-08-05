@@ -15,5 +15,6 @@
     "build": {
       "dependsOn": ["^build"]
     }
-  }
+  },
+  "analytics": true
 }
