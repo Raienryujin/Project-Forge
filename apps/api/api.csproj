@@ -13,7 +13,7 @@
   <!-- Generate OpenAPI Spec on Build -->
   <Target Name="GenerateOpenApiSpec" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
     <MakeDir Directories="../../packages/types" />
-    <Exec Command="dotnet swagger tofile --output ../../packages/types/openapi.json $(OutputPath)$(AssemblyName).dll v1" />
+    <Exec Command="dotnet swagger tofile --output ../../packages/types/openapi.json $(OutputPath)$(AssemblyName).dll v1" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=SwaggerGen" />
   </Target>
 
 </Project>

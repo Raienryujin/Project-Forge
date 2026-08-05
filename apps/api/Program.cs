@@ -14,8 +14,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Detect if we're running under Swashbuckle CLI
-var isSwaggerGen = args.Contains("--swagger");
+// Detect if we're running under Swashbuckle CLI via the MSBuild task
+var isSwaggerGen = builder.Environment.IsEnvironment("SwaggerGen");
 
 if (!isSwaggerGen)
 {
