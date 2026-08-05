@@ -113,7 +113,11 @@ api.MapGet("/ping", () => Results.Ok(new { message = "pong" }))
    .WithTags("Diagnostics");
 
 // ── Run ───────────────────────────────────────────────────────────────────
-app.Run();
+// Prevent the app from running indefinitely when NSwag is generating the OpenAPI spec
+if (app.Environment.EnvironmentName != "NSwag")
+{
+    app.Run();
+}
 
 // Required for NSwag and WebApplicationFactory to discover the Minimal API entry point
 public partial class Program { }
