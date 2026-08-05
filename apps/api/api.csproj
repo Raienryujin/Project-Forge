@@ -7,7 +7,6 @@
     
     <!-- Native Microsoft build-time OpenAPI generation -->
     <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
-    <OpenApiDocumentsDirectory>../../packages/types</OpenApiDocumentsDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +18,10 @@
     <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
   </ItemGroup>
 
-  <!-- We let Microsoft.Extensions.ApiDescription.Server handle generation natively -->
+  <!-- Move the generated api.json into the shared types package -->
+  <Target Name="MoveOpenApiSpec" AfterTargets="Build" Condition="Exists('api.json')">
+    <MakeDir Directories="../../packages/types" />
+    <Move SourceFiles="api.json" DestinationFiles="../../packages/types/api.json" />
+  </Target>
 
 </Project>
