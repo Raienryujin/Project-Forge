@@ -1,13 +1,13 @@
-import { defineConfig } from 'orval';
+import { defineConfig } from "orval";
 
 export default defineConfig({
   api: {
-    input: '../../packages/types/openapi.json',
+    input: "../../packages/types/api.json",
     output: {
-      mode: 'tags-split',
-      target: 'src/api/generated',
-      schemas: 'src/api/generated/model',
-      client: 'swr',
+      mode: "tags-split",
+      target: "src/api/generated",
+      schemas: "src/api/generated/model",
+      client: "swr",
     },
   },
 });

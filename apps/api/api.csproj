@@ -4,18 +4,24 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- Native Microsoft build-time OpenAPI generation -->
+    <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
   </ItemGroup>
 
-  <!-- Generate OpenAPI Spec on Build -->
-  <Target Name="GenerateOpenApiSpec" AfterTargets="Build">
+  <!-- Move the generated api.json into the shared types package -->
+  <Target Name="MoveOpenApiSpec" AfterTargets="Build" Condition="Exists('api.json')">
     <MakeDir Directories="../../packages/types" />
-    <Exec Command="dotnet tool restore" />
-    <Exec Command="dotnet tool run swagger tofile --output &quot;../../packages/types/openapi.json&quot; &quot;$(TargetPath)&quot; v1" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=SwaggerGen;DOTNET_ROLL_FORWARD=Major" />
+    <Move SourceFiles="api.json" DestinationFiles="../../packages/types/api.json" />
   </Target>
 
 </Project>
