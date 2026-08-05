@@ -2,7 +2,9 @@ packages:
   - "apps/*"
   - "packages/*"
 allowBuilds:
-  '@nx-dotnet/core': true
+  "@nx-dotnet/core": true
+  "@parcel/watcher": set this to true or false
   esbuild: true
+  less: set this to true or false
   nx: true
   unrs-resolver: true

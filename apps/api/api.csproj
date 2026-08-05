@@ -11,9 +11,10 @@
   </ItemGroup>
 
   <!-- Generate OpenAPI Spec on Build -->
-  <Target Name="GenerateOpenApiSpec" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+  <Target Name="GenerateOpenApiSpec" AfterTargets="Build">
     <MakeDir Directories="../../packages/types" />
-    <Exec Command="dotnet swagger tofile --output ../../packages/types/openapi.json $(OutputPath)$(AssemblyName).dll v1" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=SwaggerGen" />
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet tool run swagger tofile --output &quot;../../packages/types/openapi.json&quot; &quot;$(TargetPath)&quot; v1" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=SwaggerGen" />
   </Target>
 
 </Project>
