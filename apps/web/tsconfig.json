@@ -1,5 +1,5 @@
 {
-  "extends": "@projectforge/config/tsconfig.json",
+  "extends": "../../packages/config/tsconfig.json",
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
