@@ -14,6 +14,14 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Detect if we're running under Swashbuckle CLI
+var isSwaggerGen = args.Contains("--swagger");
+
+if (!isSwaggerGen)
+{
+    // Register real infrastructure: DbContext, Redis, message queues, etc.
+}
+
 // ── Logging ──────────────────────────────────────────────────────────────────
 // Remove all default providers (Console, Debug, EventLog) to prevent
 // synchronous log I/O from blocking the Kestrel thread pool on hot paths.
