@@ -9,14 +9,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
-    <PackageReference Include="NSwag.MSBuild" Version="14.0.7" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- Generate OpenAPI Spec on Build -->
+  <!-- Generate OpenAPI Spec on Build via Lightweight CLI -->
   <Target Name="GenerateOpenApiSpec" AfterTargets="Build">
     <MakeDir Directories="../../packages/types" />
-    <!-- Use NSwag MSBuild variables to run the generator against the built assembly -->
-    <Exec Command="$(NSwagExe_Net80) aspnetcore2openapi /documentName:v1 /project:api.csproj /output:../../packages/types/openapi.json" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=NSwag" />
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet nswag run nswag.json /variables:Configuration=$(Configuration)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=NSwag" />
   </Target>
 
 </Project>
