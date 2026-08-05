@@ -14,13 +14,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Detect if we're running under Swashbuckle CLI via the MSBuild task
-var isSwaggerGen = builder.Environment.IsEnvironment("SwaggerGen");
-
-if (!isSwaggerGen)
-{
-    // Register real infrastructure: DbContext, Redis, message queues, etc.
-}
 
 // ── Logging ──────────────────────────────────────────────────────────────────
 // Remove all default providers (Console, Debug, EventLog) to prevent
