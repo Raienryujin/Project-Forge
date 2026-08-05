@@ -1,4 +1,4 @@
-import baseConfig from "@projectforge/config/eslint-preset.mjs";
+import baseConfig from "../../packages/config/eslint-preset.mjs";
 import nextPlugin from "@next/eslint-plugin-next";
 import reactPlugin from "eslint-plugin-react";
 import hooksPlugin from "eslint-plugin-react-hooks";
