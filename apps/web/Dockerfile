@@ -33,6 +33,11 @@ ENV NODE_ENV=production
 COPY --from=builder /workspace/apps/web/.next/standalone ./
 COPY --from=builder /workspace/apps/web/.next/static ./.next/static
 COPY --from=builder /workspace/apps/web/public ./public
+COPY --from=builder /workspace/apps/web/entrypoint.sh ./
+
+# Make the entrypoint executable
+RUN chmod +x ./entrypoint.sh
 
 EXPOSE 3000
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "server.js"]

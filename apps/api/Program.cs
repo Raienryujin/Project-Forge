@@ -42,7 +42,12 @@ builder.WebHost.ConfigureKestrel(options =>
 // ── Services ──────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApiDocument(config =>
+{
+    config.DocumentName = "v1";
+    config.Title = "Project Forge API";
+    config.Version = "v1";
+});
 
 // Output cache (uncomment to use)
 // builder.Services.AddOutputCache();
@@ -66,8 +71,8 @@ var app = builder.Build();
 // ── Middleware ────────────────────────────────────────────────────────────
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseOpenApi();
+    app.UseSwaggerUi(); // NSwag serves the UI via this method
 }
 
 app.UseCors();
@@ -110,5 +115,5 @@ api.MapGet("/ping", () => Results.Ok(new { message = "pong" }))
 // ── Run ───────────────────────────────────────────────────────────────────
 app.Run();
 
-// Required for Swashbuckle CLI and WebApplicationFactory to discover the Minimal API entry point
+// Required for NSwag and WebApplicationFactory to discover the Minimal API entry point
 public partial class Program { }
