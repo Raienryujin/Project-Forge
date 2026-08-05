@@ -128,3 +128,10 @@ TestResults/
 .nx/cache
 .nx/workspace-data
 .nx/migrate-runs
+
+# ────────────────────────────────────────────────────────────────────────────
+# Generated Artifacts (OpenAPI + Orval)
+# ────────────────────────────────────────────────────────────────────────────
+packages/types/openapi.json
+apps/web/src/api/generated/
+apps/api/api.json

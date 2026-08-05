@@ -2,9 +2,5 @@
   "name": "@projectforge/config",
   "version": "0.1.0",
   "private": true,
-  "main": "index.js",
-  "dependencies": {
-    "eslint-config-next": "^14.1.0",
-    "eslint-config-prettier": "^9.1.0"
-  }
+  "main": "eslint-preset.mjs"
 }

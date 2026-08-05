@@ -1,0 +1,25 @@
+{
+  "name": "web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "generate-api": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["api:build"],
+      "inputs": ["{workspaceRoot}/packages/types/openapi.json"],
+      "outputs": ["{projectRoot}/src/api/generated/**"],
+      "options": {
+        "command": "pnpm run generate-api",
+        "cwd": "apps/web"
+      }
+    },
+    "serve": {
+      "dependsOn": ["generate-api"]
+    },
+    "lint": {
+      "dependsOn": ["generate-api"]
+    },
+    "build": {
+      "dependsOn": ["generate-api", "^build"]
+    }
+  }
+}

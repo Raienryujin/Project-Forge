@@ -14,6 +14,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // ── Logging ──────────────────────────────────────────────────────────────────
 // Remove all default providers (Console, Debug, EventLog) to prevent
 // synchronous log I/O from blocking the Kestrel thread pool on hot paths.
@@ -108,3 +109,6 @@ api.MapGet("/ping", () => Results.Ok(new { message = "pong" }))
 
 // ── Run ───────────────────────────────────────────────────────────────────
 app.Run();
+
+// Required for Swashbuckle CLI and WebApplicationFactory to discover the Minimal API entry point
+public partial class Program { }

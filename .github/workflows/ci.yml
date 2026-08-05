@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   validate-and-build:
-    name: "Nx Build & Strict Type Gate"
+    name: "Nx Graph Execution & Build"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -26,7 +26,12 @@ jobs:
       - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          global-json-file: global.json
+
+      - name: Restore .NET local tools
+        # Installs Swashbuckle.AspNetCore.Cli so the api:build MSBuild target
+        # can execute 'dotnet swagger tofile' to emit packages/types/openapi.json
+        run: dotnet tool restore
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -34,9 +39,9 @@ jobs:
           node-version: "20"
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
           run_install: false
 
       - name: Get pnpm store directory
@@ -44,7 +49,7 @@ jobs:
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - name: Setup pnpm cache
+      - name: Cache pnpm store
         uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
@@ -55,29 +60,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Cache Nx Workspace
+        uses: actions/cache@v4
+        with:
+          path: .nx/cache
+          key: ${{ runner.os }}-nx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-nx-
+
       - name: Derive appropriate SHAs for Nx
         uses: nrwl/nx-set-shas@v4
 
       - name: Run Nx Affected (Lint, Test, Build)
+        # The Nx graph mathematically guarantees api:build and web:generate-api
+        # execute before any web targets that depend on them.
         run: npx nx affected -t lint test build
-
-      - name: Strict Type Gate (Day Zero OpenAPI)
-        run: |
-          # 1. Build the API to ensure api.json is generated
-          cd apps/api
-          dotnet build --configuration Release
-          
-          # 2. Generate frontend hooks
-          cd ../web
-          pnpm run generate-api
-          
-          # 3. Check for uncommitted generated changes
-          cd ../../
-          if [[ -n $(git status --porcelain -- apps/web/src/api) ]]; then
-            echo "::error::Strict Type Gate Failed: The frontend types do not map perfectly to the backend."
-            echo "::error::Please run 'pnpm run generate-api' in apps/web and commit the generated types."
-            git status --porcelain -- apps/web/src/api
-            git diff -- apps/web/src/api
-            exit 1
-          fi
-          echo "✅ Strict Type Gate Passed: Frontend types perfectly match the C# API."
